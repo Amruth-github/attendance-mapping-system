@@ -24,8 +24,8 @@ def dashboard():
         st.write(f"Total Teachers : {get_total_teachers()}")
         st.write(f"Average age of students : {get_avg_students()}")
         st.write(f"Average age of teachers : {get_avg_teachers()}")
-        Class = st.selectbox('Select Class', [i[0] for i in get_all_class_students()])
-        st.write(f'Total Students in {Class} : {dict(get_all_class_students())[Class]}')
+        Class = st.selectbox('Select Class', [i[0] for i in get_all_class()])
+        st.write(f'Total Students in {Class} : {get_number_of_students_in_class(Class)}')
     with st.expander("Query Box"):
         query = st.text_area("Enter queries")
         if st.button("Execute"):

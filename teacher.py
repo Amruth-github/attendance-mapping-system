@@ -10,6 +10,12 @@ def teacher(username):
     st.write(f"""
         <p style = "padding-left:17cm;width:150cm;">{data[0][0]}</p>
         <p style = "width:150cm;padding-left:17cm;">{data[0][1]}</p>""", unsafe_allow_html=True)
+    with st.expander("Account"):
+        st.write('Update Password')
+        newPassword = st.text_input("Enter new password")
+        if st.button('Update Password'):
+            update_password(username, newPassword, "Teacher")
+            st.success("Password Updated Successfully")
     date = st.date_input('Select Date', max_value=datetime.date.today())
     course = st.selectbox('Select Course', [i[0] for i in get_teacher_courses(username)])
     Class = st.selectbox('Select Class', [i[0] for i in get_class_on_day(username, date, course)])

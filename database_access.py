@@ -21,9 +21,13 @@ def get_total_teachers():
     cursor.execute('select count(*) from teacher')
     return cursor.fetchall()[0][0]
 
-def get_all_class_students(class_ = '*'):
-    cursor.execute(f'select Class, count(*) from student group by Class')
+def get_all_class():
+    cursor.execute(f'select Class from student group by Class')
     return cursor.fetchall()
+
+def get_number_of_students_in_class(Class):
+    cursor.execute(f'select TotalStudentsInClass("{Class}")')
+    return cursor.fetchall()[0][0]
 
 cursor = db.cursor()
 
@@ -61,6 +65,9 @@ def course_of_student(username, doa):
     class_ = cursor.fetchall()[0][0]
     cursor.execute(f'select Period_one, Period_two, Period_three, Period_four, Period_five from timetable where dow = DAYNAME("{doa}") and class = "{class_}"')
     return cursor.fetchall()
+
+def update_password(username, newPassword, state):
+    cursor.execute(f'CALL UpdatePassword("{username}", "{newPassword}", "{state}")')
 
 def get_teacher_classes(username: str, course: str):
     cursor.execute(f'select class from teaches where TRN = "{username}" and course_code = "{course}"')
@@ -108,10 +115,6 @@ ORDER BY ORDINAL_POSITION
     """)
     return cursor.fetchall()
 
-def format(vals):
-    query = ",".join(vals)
-    return query
-
 def insert(table, vals):
     query = f'insert into {table} values('
     for i in range(len(vals) - 1):
@@ -140,6 +143,7 @@ def update(table, vals, selected_row):
     if len(cols):
         query += f'{cols[len(cols) - 1]} = "{selected_row[0][cols[-1]]}"'
     cursor.execute(query)
+    db.commit()
 
 def delete(table, selected_rows):
     for rows in selected_rows:
@@ -158,4 +162,8 @@ def delete(table, selected_rows):
         print(query)
         cursor.execute(query)
         db.commit()
+
+def get_teachers_of_students(Class):
+    cursor.execute(f'select Name, course_code from teacher join teaches where teacher.TRN = teaches.TRN and teaches.Class = "{Class}"') #Join Query 1
+    return cursor.fetchall()
 
